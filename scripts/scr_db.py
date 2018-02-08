@@ -33,18 +33,21 @@ def data_gen_from_pkl(pkl_fpath):
 
 
 def store_all(session, herb_dicts):
-    for d in ygen:
+    for d in herb_dicts:
         herb = create_herb(session, d)
         session.add(herb)
     session.commit()
-    
 
-if __name__ == '__main__':
+
+def create_database(session):
     ypkl = path.join(home(), 'koodi/yrttiharava/output/yrtit.pickle')
     ygen = data_gen_from_pkl(ypkl)
-    engine = create_engine('sqlite:///../output/yrttibase.db', echo=False)
+    store_all(session, ygen)
+
+
+if __name__ == '__main__':
+    engine = create_engine('sqlite:///../data/yrttikanta.db', echo=False)
     Base.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)
     session = Session()
-    store_all(session, ygen)
     qfamily = session.query(Family.id, Family.name).order_by(Family.name)
