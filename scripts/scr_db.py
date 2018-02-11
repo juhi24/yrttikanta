@@ -47,7 +47,7 @@ def create_database(session):
 
 if __name__ == '__main__':
     engine = create_engine('sqlite:///../data/yrttikanta.db', echo=False)
-    Base.metadata.create_all(engine)
+    #Base.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)
     session = Session()
     qfamily = session.query(Family.id, Family.name).order_by(Family.name)

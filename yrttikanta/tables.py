@@ -63,6 +63,9 @@ class Herb(NameID, Base):
     def __repr__(self):
         return '<Herb {}>'.format(self.name)
 
+    def to_dict(self):
+        return dict(name=self.name, family=self.family, alt_names=self.alt_names)
+
 
 class Family(GetMixin, Base):
     """herb family in scientific classification"""
