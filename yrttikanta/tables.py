@@ -64,7 +64,9 @@ class Herb(NameID, Base):
         return '<Herb {}>'.format(self.name)
 
     def to_dict(self):
-        return dict(name=self.name, family=self.family, alt_names=self.alt_names)
+        return dict(name=self.name,
+                    family=self.family.name,
+                    family_fi=self.family.name_fi)
 
 
 class Family(GetMixin, Base):
