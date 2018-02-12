@@ -39,15 +39,19 @@ def store_all(session, herb_dicts):
     session.commit()
 
 
-def create_database(session):
+def create_database(engine):
+    """Create database and fill with data."""
+    Base.metadata.create_all(engine)
+    Session = sessionmaker(bind=engine)
+    session = Session()
     ypkl = path.join(home(), 'koodi/yrttiharava/output/yrtit.pickle')
     ygen = data_gen_from_pkl(ypkl)
     store_all(session, ygen)
+    session.close()
 
 
 if __name__ == '__main__':
     engine = create_engine('sqlite:///../data/yrttikanta.db', echo=False)
-    #Base.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)
     session = Session()
-    qfamily = session.query(Family.id, Family.name).order_by(Family.name)
+    #qfamily = session.query(Family.id, Family.name).order_by(Family.name)
