@@ -28,7 +28,8 @@ if __name__ == '__main__':
                 if br:
                     break
             if hasattr(s, 'text'):
-                if s.text:
-                    p_texts.append(s.text)
-        sections[h2.text] = p_texts
+                text = s.text.replace('\n', '')
+                if text and text not in ['Ruokaohjeet']:
+                    p_texts.append(text)
+        sections[h2.text] = p_texts or [h2.next_sibling.replace('\n', '')]
 
