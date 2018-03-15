@@ -53,6 +53,7 @@ class Herb(NameID, Base):
     alt_names = relationship('AltName',
                              secondary=herb_names,
                              back_populates='herbs')
+    sections = relationship('Section', back_populates='herb')
 
     def __init__(self, name, alt_names=None):
         self.name = name
@@ -84,7 +85,7 @@ class Family(GetMixin, Base):
 
 
 class AltName(GetMixin, Base):
-    """Alternative herb names"""
+    """alternative herb names"""
     __tablename__ = 'alt_names'
     herbs = relationship('Herb',
                          secondary=herb_names,
@@ -95,4 +96,28 @@ class AltName(GetMixin, Base):
 
     def __repr__(self):
         return '<AltName {}>'.format(self.name)
+
+
+class Section(Base):
+    """text section"""
+    __tablename__ = 'sections'
+    id = Column(Integer, primary_key=True)
+    text = Column(String, nullable=False)
+    title_id = Column(Integer, ForeignKey('section_titles.id'))
+    title = relationship('SectionTitle')
+    herb_id = Column(Integer, ForeignKey('herbs.id'))
+    herb = relationship('Herb', back_populates='sections')
+
+
+class SectionTitle(GetMixin, Base):
+    """text section type"""
+    __tablename__ = 'section_titles'
+    priority = Column(Integer, unique=True)
+
+    def __init__(self, name):
+        self.name = name.capitalize()
+
+    def __repr__(self):
+        return '<SectionTitle {}>'.format(self.name)
+
 

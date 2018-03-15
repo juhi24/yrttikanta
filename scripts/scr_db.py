@@ -7,8 +7,14 @@ import pickle
 from os import path
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from yrttikanta.tables import Herb, Family, AltName, Base
+from yrttikanta.tables import (Herb, Family, AltName, Section, SectionTitle,
+                               Base)
 from j24 import home
+
+
+def list2p(paragraphs):
+    """list of paragraphs to html"""
+    return ''.join(['<p>{}</p>'.format(p) for p in paragraphs])
 
 
 def create_herb(session, data):
@@ -19,6 +25,14 @@ def create_herb(session, data):
     for alt_name in data['muut nimet']:
         alt_names.add(AltName.get_or_create(session, alt_name))
     herb.alt_names = list(alt_names)
+    sectionsd = data['sections']
+    sections = []
+    for section_name in sectionsd:
+        text = list2p(sectionsd[section_name])
+        section = Section(text=text)
+        section.title = SectionTitle.get_or_create(session, name=section_name)
+        sections.append(section)
+    herb.sections = sections
     return herb
 
 
