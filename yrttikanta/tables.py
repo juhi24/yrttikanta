@@ -65,13 +65,16 @@ class Herb(NameID, Base):
         return '<Herb {}>'.format(self.name)
 
     def sections_dict(self):
-        return dict(tuple(section.as_tuple() for section in self.sections))
+        return dict(tuple(s.as_tuple() for s in self.sections))
+
+    def sections_html(self):
+        return ''.join(s.as_html() for s in self.sections)
 
     def as_dict(self):
         return dict(name=self.name,
                     family=self.family.name,
                     family_fi=self.family.name_fi,
-                    sections = self.sections_dict())
+                    html=self.sections_html())
 
 
 class Family(GetMixin, Base):
@@ -120,6 +123,9 @@ class Section(Base):
 
     def as_tuple(self):
         return self.title.name, self.text
+
+    def as_html(self):
+        return '<h2>{}</h2>{}'.format(*self.as_tuple())
 
 
 class SectionTitle(GetMixin, Base):
