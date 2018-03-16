@@ -68,4 +68,5 @@ if __name__ == '__main__':
     engine = create_engine('sqlite:///../data/yrttikanta.db', echo=False)
     Session = sessionmaker(bind=engine)
     session = Session()
+    h = session.query(Herb).first()
     #qfamily = session.query(Family.id, Family.name).order_by(Family.name)

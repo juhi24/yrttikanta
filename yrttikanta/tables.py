@@ -64,10 +64,14 @@ class Herb(NameID, Base):
     def __repr__(self):
         return '<Herb {}>'.format(self.name)
 
-    def to_dict(self):
+    def sections_dict(self):
+        return dict(tuple(section.as_tuple() for section in self.sections))
+
+    def as_dict(self):
         return dict(name=self.name,
                     family=self.family.name,
-                    family_fi=self.family.name_fi)
+                    family_fi=self.family.name_fi,
+                    sections = self.sections_dict())
 
 
 class Family(GetMixin, Base):
@@ -107,6 +111,15 @@ class Section(Base):
     title = relationship('SectionTitle')
     herb_id = Column(Integer, ForeignKey('herbs.id'))
     herb = relationship('Herb', back_populates='sections')
+
+    def __repr__(self):
+        return '<Section {}>'.format(self.title.name)
+
+    def __str__(self):
+        return self.text
+
+    def as_tuple(self):
+        return self.title.name, self.text
 
 
 class SectionTitle(GetMixin, Base):
