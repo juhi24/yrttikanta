@@ -19,6 +19,9 @@ class NameID():
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False, unique=True)
 
+    def __repr__(self):
+        return '<{0} {1}>'.format(type(self).__name__, self.name)
+
     def __str__(self):
         return self.name
 
@@ -64,9 +67,6 @@ class Herb(NameID, Base):
             for alt_name in alt_names:
                 self.alt_names.append(AltName(alt_name))
 
-    def __repr__(self):
-        return '<Herb {}>'.format(self.name)
-
     def sections_dict(self):
         return dict(tuple(s.as_tuple() for s in self.sections))
 
@@ -90,9 +90,6 @@ class Family(GetMixin, Base):
         self.name = name.capitalize()
         self.name_fi = name_fi
 
-    def __repr__(self):
-        return '<Family {}>'.format(self.name)
-
 
 class AltName(GetMixin, Base):
     """alternative herb names"""
@@ -103,9 +100,6 @@ class AltName(GetMixin, Base):
 
     def __init__(self, name):
         self.name = name.lower()
-
-    def __repr__(self):
-        return '<AltName {}>'.format(self.name)
 
 
 class Section(Base):
@@ -138,8 +132,5 @@ class SectionTitle(GetMixin, Base):
 
     def __init__(self, name):
         self.name = name.capitalize()
-
-    def __repr__(self):
-        return '<SectionTitle {}>'.format(self.name)
 
 
