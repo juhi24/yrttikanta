@@ -19,6 +19,9 @@ class NameID():
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False, unique=True)
 
+    def __str__(self):
+        return self.name
+
 
 class GetMixin(NameID):
     """a mixin with get-or-create constructor"""
