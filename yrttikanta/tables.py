@@ -75,6 +75,7 @@ class Herb(NameID, Base):
 
     def as_dict(self):
         return dict(name=self.name,
+                    alt_names=list(map(str, self.alt_names)),
                     family=self.family.name,
                     family_fi=self.family.name_fi,
                     html=self.sections_html())
