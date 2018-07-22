@@ -4,6 +4,8 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 __metaclass__ = type
 
 import pickle
+import urllib.request
+import http.client
 from os import path
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -51,6 +53,36 @@ def store_all(session, herb_dicts):
         herb = create_herb(session, d)
         session.add(herb)
     session.commit()
+
+
+def get_all_names(session):
+    """Get all herb names as a tuple."""
+    q = session.query(Herb.name)
+    return tuple(x[0] for x in q.all())
+
+
+def get_all_herb_urls(session):
+    """tuple of all herb urls by querying names"""
+    urlfmt = 'http://yrttitarha.fi/kanta/{}'
+    a = get_all_names(session)
+    return tuple(urlfmt.format(x) for x in a)
+
+
+def url_status_code(url):
+    us = urllib.request.urlsplit(url)
+    c = http.client.HTTPConnection(us.hostname)
+    c.request('HEAD', us.path)
+    return c.getresponse().status
+
+
+def get_all_img_urls(session):
+    """all herb image (drawing) urls by querying names"""
+    u = get_all_herb_urls(session)
+    urls = [x.replace('ä','a').replace('ö', 'o')+'/kuva.jpg' for x in u]
+    for url in urls:
+        if url_status_code(url) != 200:
+            urls.remove(url)
+    return urls
 
 
 def create_database(engine):
