@@ -61,10 +61,15 @@ def get_all_names(session):
     return tuple(x[0] for x in q.all())
 
 
+def strip_accents(s):
+    """ä -> a, ö -> o"""
+    return s.replace('ä','a').replace('ö', 'o')
+
+
 def herb_url(herb):
     """herb url from herb name"""
     urlfmt = 'http://yrttitarha.fi/kanta/{}'
-    return urlfmt.format(herb.replace('ä','a').replace('ö', 'o'))
+    return urlfmt.format(strip_accents(herb))
 
 
 def dl_herb_imgs(session, dl_dir=None):
@@ -73,7 +78,7 @@ def dl_herb_imgs(session, dl_dir=None):
     for h in herbs:
         print(h)
         url = herb_url(h)
-        dl_fmt = path.join(dl_dir, h+'_{}.jpg')
+        dl_fmt = path.join(dl_dir, strip_accents(h)+'_{}.jpg')
         trans = {'kuva': 'drawing', 'valokuva': 'photo'}
         for fi, en in trans.items():
             source = '{}/{}.jpg'.format(url, fi)
