@@ -61,36 +61,34 @@ def get_all_names(session):
     return tuple(x[0] for x in q.all())
 
 
-def get_all_herb_urls(session):
-    """tuple of all herb urls by querying names"""
+def herb_url(herb):
+    """herb url from herb name"""
     urlfmt = 'http://yrttitarha.fi/kanta/{}'
-    a = get_all_names(session)
-    return tuple(urlfmt.format(x) for x in a)
+    return urlfmt.format(herb.replace('ä','a').replace('ö', 'o'))
 
 
-def url_status_code(url):
-    us = urllib.request.urlsplit(url)
-    c = http.client.HTTPConnection(us.hostname)
-    c.request('HEAD', us.path)
-    return c.getresponse().status
+def dl_herb_imgs(session, dl_dir=None):
+    dl_dir = dl_dir or path.realpath(path.join('..', 'data', 'img'))
+    herbs = get_all_names(session)
+    for h in herbs:
+        print(h)
+        url = herb_url(h)
+        dl_fmt = path.join(dl_dir, h+'_{}.jpg')
+        trans = {'kuva': 'drawing', 'valokuva': 'photo'}
+        for fi, en in trans.items():
+            source = '{}/{}.jpg'.format(url, fi)
+            try:
+                urllib.request.urlretrieve(source, dl_fmt.format(en))
+            except urllib.request.HTTPError:
+                print('{} not found. Skipping.'.format(en.capitalize()))
 
 
-def get_all_img_urls(session):
-    """all herb image (drawing) urls by querying names"""
-    u = get_all_herb_urls(session)
-    urls = [x.replace('ä','a').replace('ö', 'o')+'/kuva.jpg' for x in u]
-    for url in urls:
-        if url_status_code(url) != 200:
-            urls.remove(url)
-    return urls
-
-
-def create_database(engine):
+def create_database(engine, pkl_path='koodi/yrttiharava/output/yrtit.pickle'):
     """Create database and fill with data."""
     Base.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)
     session = Session()
-    ypkl = path.join(home(), 'koodi/yrttiharava/output/yrtit.pickle')
+    ypkl = path.join(home(), pkl_path)
     ygen = data_gen_from_pkl(ypkl)
     store_all(session, ygen)
     session.close()
