@@ -3,6 +3,8 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 __metaclass__ = type
 
+from os import path
+from glob import glob
 from sqlalchemy import Table, Column, Integer, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -73,12 +75,18 @@ class Herb(NameID, Base):
     def sections_html(self):
         return ''.join(s.as_html() for s in self.sections)
 
+    def img_paths(self):
+        nameglob = '{}_*.jpg'.format(self.name)
+        rel_path = path.join('..', 'data', 'img', nameglob)
+        return glob(path.realpath(rel_path))
+
     def as_dict(self):
         return dict(name=self.name,
                     alt_names=list(map(str, self.alt_names)),
                     family=self.family.name,
                     family_fi=self.family.name_fi,
-                    html=self.sections_html())
+                    html=self.sections_html(),
+                    img_paths=self.img_paths())
 
 
 class Family(GetMixin, Base):

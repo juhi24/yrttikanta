@@ -52,7 +52,7 @@ setup(
     #
     # This field corresponds to the "Home-Page" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#home-page-optional
-    url='https://github.com/juhi24/yrttiharava',  # Optional
+    url='https://github.com/juhi24/yrttikanta',  # Optional
     author='Jussi Tiira',  # Optional
     author_email='jussi@j24.fi',  # Optional
 
