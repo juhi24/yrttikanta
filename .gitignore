@@ -99,6 +99,3 @@ ENV/
 
 # mypy
 .mypy_cache/
-
-# herb images
-/data/img
