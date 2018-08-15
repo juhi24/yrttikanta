@@ -78,7 +78,8 @@ class Herb(NameID, Base):
         return ''.join(s.as_html() for s in self.sections)
 
     def img_paths(self):
-        name_glob = '{}_*.jpg'.format(self.name)
+        ascii_name = self.name.replace('ö', 'o').replace('ä', 'a')
+        name_glob = '{}_*.jpg'.format(ascii_name)
         img_glob = path.join(DATA_DIR, 'img', name_glob)
         return glob(img_glob)
 
