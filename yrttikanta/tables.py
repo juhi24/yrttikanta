@@ -10,6 +10,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
 
+DATA_DIR = path.join(path.dirname(path.dirname(__file__)), 'data')
+
 Base = declarative_base()
 herb_names = Table('herb_names', Base.metadata,
                    Column('herb_id', ForeignKey('herbs.id'), primary_key=True),
@@ -76,9 +78,9 @@ class Herb(NameID, Base):
         return ''.join(s.as_html() for s in self.sections)
 
     def img_paths(self):
-        nameglob = '{}_*.jpg'.format(self.name)
-        rel_path = path.join('..', 'data', 'img', nameglob)
-        return glob(path.realpath(rel_path))
+        name_glob = '{}_*.jpg'.format(self.name)
+        img_glob = path.join(DATA_DIR, 'img', nameglob)
+        return glob(img_glob)
 
     def as_dict(self):
         return dict(name=self.name,
