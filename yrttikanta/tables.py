@@ -79,7 +79,7 @@ class Herb(NameID, Base):
 
     def img_paths(self):
         name_glob = '{}_*.jpg'.format(self.name)
-        img_glob = path.join(DATA_DIR, 'img', nameglob)
+        img_glob = path.join(DATA_DIR, 'img', name_glob)
         return glob(img_glob)
 
     def as_dict(self):
