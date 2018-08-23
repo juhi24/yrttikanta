@@ -19,7 +19,7 @@ def list2p(paragraphs):
     return ''.join(['<p>{}</p>'.format(p) for p in paragraphs])
 
 
-def create_herb(session, data):
+def create_herb(session, data, separate_p=False):
     herb = Herb(name=data['kasvi'])
     herb.family = Family.get_or_create(session, name=data['heimo'][0],
                                        name_fi=data['heimo'][1])
@@ -30,7 +30,10 @@ def create_herb(session, data):
     sectionsd = data['sections']
     sections = []
     for section_name in sectionsd:
-        text = list2p(sectionsd[section_name])
+        if separate_p:
+            text = list2p(sectionsd[section_name])
+        else:
+            text = sectionsd[section_name]
         section = Section(text=text)
         section.title = SectionTitle.get_or_create(session, name=section_name)
         sections.append(section)
@@ -73,6 +76,7 @@ def herb_url(herb):
 
 
 def dl_herb_imgs(session, dl_dir=None):
+    """download herb images"""
     dl_dir = dl_dir or path.realpath(path.join('..', 'data', 'img'))
     herbs = get_all_names(session)
     for h in herbs:
@@ -86,6 +90,19 @@ def dl_herb_imgs(session, dl_dir=None):
                 urllib.request.urlretrieve(source, dl_fmt.format(en))
             except urllib.request.HTTPError:
                 print('{} not found. Skipping.'.format(en.capitalize()))
+
+
+def dl_html(session, dl_dir):
+    """download herb texts"""
+    import requests
+    from bs4 import BeautifulSoup
+    for name in get_all_names(session):
+        url = herb_url(name)
+        r = requests.get(url)
+        soup = BeautifulSoup(r.text, 'lxml')
+        out_file = path.join(dl_dir, name+'.html')
+        with open(out_file, 'w') as f:
+            f.write(soup.prettify())
 
 
 def create_database(engine, pkl_path='koodi/yrttiharava/output/yrtit.pickle'):
