@@ -91,8 +91,8 @@ class Herb(NameID, Base):
 
     def as_dict(self):
         """herb data as dict"""
-        return dict(name=self.name,
-                    name_latin=self.name_latin,
+        return dict(name=self.name.capitalize(),
+                    name_latin=self.name_latin.capitalize(),
                     alt_names=list(map(str, self.alt_names)),
                     family=self.family.name,
                     family_fi=self.family.name_fi,
