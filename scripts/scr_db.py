@@ -20,7 +20,9 @@ def list2p(paragraphs):
 
 
 def create_herb(session, data, separate_p=False):
-    herb = Herb(name=data['kasvi'])
+    latin = data['latinankieliset nimet'][0]
+    print(latin)
+    herb = Herb(name=data['kasvi'], name_latin=latin)
     herb.family = Family.get_or_create(session, name=data['heimo'][0],
                                        name_fi=data['heimo'][1])
     alt_names = set() # prevent duplicates
@@ -118,6 +120,7 @@ def create_database(engine, pkl_path='koodi/yrttiharava/output/yrtit.pickle'):
 
 if __name__ == '__main__':
     engine = create_engine('sqlite:///../data/yrttikanta.db', echo=False)
+    #create_database(engine)
     Session = sessionmaker(bind=engine)
     session = Session()
     h = session.query(Herb).first()

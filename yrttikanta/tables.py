@@ -56,6 +56,8 @@ class GetMixin(NameID):
 class Herb(NameID, Base):
     """the main herb class"""
     __tablename__ = 'herbs'
+    # rumex spp. occurs twice
+    name_latin = Column(String, nullable=False, unique=False)
     # many to one
     family_id = Column(Integer, ForeignKey('families.id'))
     family = relationship('Family', back_populates='herbs')
@@ -65,26 +67,32 @@ class Herb(NameID, Base):
                              back_populates='herbs')
     sections = relationship('Section', back_populates='herb')
 
-    def __init__(self, name, alt_names=None):
+    def __init__(self, name, name_latin, alt_names=None):
         self.name = name
+        self.name_latin = name_latin
         if alt_names is not None:
             for alt_name in alt_names:
                 self.alt_names.append(AltName(alt_name))
 
     def sections_dict(self):
+        """text sections as dict"""
         return dict(tuple(s.as_tuple() for s in self.sections))
 
     def sections_html(self):
+        """text sections as html"""
         return ''.join(s.as_html() for s in self.sections)
 
     def img_paths(self):
+        """full paths to herb images"""
         ascii_name = self.name.replace('ö', 'o').replace('ä', 'a')
         name_glob = '{}_*.jpg'.format(ascii_name)
         img_glob = path.join(DATA_DIR, 'img', name_glob)
         return glob(img_glob)
 
     def as_dict(self):
+        """herb data as dict"""
         return dict(name=self.name,
+                    name_latin=self.name_latin,
                     alt_names=list(map(str, self.alt_names)),
                     family=self.family.name,
                     family_fi=self.family.name_fi,
