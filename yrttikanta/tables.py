@@ -9,8 +9,8 @@ from sqlalchemy import Table, Column, Integer, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
+from yrttikanta import DATA_DIR
 
-DATA_DIR = path.join(path.dirname(path.dirname(__file__)), 'data')
 
 Base = declarative_base()
 herb_names = Table('herb_names', Base.metadata,
