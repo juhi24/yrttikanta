@@ -1,14 +1,16 @@
 # coding: utf-8
 """"""
-from __future__ import absolute_import, division, print_function, unicode_literals
-__metaclass__ = type
 
+# builtin
 import pickle
 import urllib.request
-import http.client
 from os import path
+
+# pypi
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
+# local
 from yrttikanta import Session
 from yrttikanta.tables import (Herb, Family, AltName, Section, SectionTitle,
                                Base)
