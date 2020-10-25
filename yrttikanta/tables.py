@@ -1,14 +1,16 @@
 # coding: utf-8
-""""""
-from __future__ import absolute_import, division, print_function, unicode_literals
-__metaclass__ = type
+"""database table declarations"""
 
+# builtin
 from os import path
 from glob import glob
+
+# pypi
 from sqlalchemy import Table, Column, Integer, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
+# local
 from yrttikanta import DATA_DIR
 
 
@@ -152,5 +154,3 @@ class SectionTitle(GetMixin, Base):
 
     def __init__(self, name):
         self.name = name.capitalize()
-
-
