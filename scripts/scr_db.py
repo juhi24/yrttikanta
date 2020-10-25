@@ -9,9 +9,9 @@ import http.client
 from os import path
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from yrttikanta import Session
 from yrttikanta.tables import (Herb, Family, AltName, Section, SectionTitle,
                                Base)
-from j24 import home
 
 
 def list2p(paragraphs):
@@ -112,16 +112,16 @@ def create_database(engine, pkl_path='koodi/yrttiharava/output/yrtit.pickle'):
     Base.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)
     session = Session()
-    ypkl = path.join(home(), pkl_path)
+    ypkl = path.join(path.expanduser('~'), pkl_path)
     ygen = data_gen_from_pkl(ypkl)
     store_all(session, ygen)
     session.close()
 
 
 if __name__ == '__main__':
-    engine = create_engine('sqlite:///../data/yrttikanta.db', echo=False)
+    #engine = create_engine('sqlite:///../data/yrttikanta.db', echo=False)
     #create_database(engine)
-    Session = sessionmaker(bind=engine)
+    #Session = sessionmaker(bind=engine)
     session = Session()
     h = session.query(Herb).first()
     #qfamily = session.query(Family.id, Family.name).order_by(Family.name)
