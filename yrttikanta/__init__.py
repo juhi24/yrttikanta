@@ -3,7 +3,7 @@
 # builtin
 from os import path
 
-#pypi
+# pypi
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
